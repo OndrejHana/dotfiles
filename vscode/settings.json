@@ -1,2 +1,13 @@
 {
+    "editor.tabSize": 2,
+    "editor.cursorSmoothCaretAnimation": true,
+    "workbench.list.smoothScrolling": true,
+    "editor.smoothScrolling": true,
+    "terminal.integrated.smoothScrolling": true,
+    "editor.minimap.enabled": false,
+    "tabnine.experimentalAutoImports": true,
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorTheme": "GitHub Dark",
+    "editor.guides.indentation": false,
+    "editor.lineNumbers": "off"
 }
