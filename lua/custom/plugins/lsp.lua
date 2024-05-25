@@ -71,7 +71,7 @@ return {
             mapping = {
                 ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
                 ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-                ["<C-CR>"] = cmp.mapping(
+                ["<C-h>"] = cmp.mapping(
                     cmp.mapping.confirm({
                         behavior = cmp.ConfirmBehavior.Insert,
                         select = true
@@ -112,7 +112,7 @@ return {
             end
         end)
 
-        vim.keymap.set({"i", "s"}, "<C-k>", function ()
+        vim.keymap.set({"i", "s"}, "<C-j>", function ()
             if ls.expand_or_jumpable(-1) then
                 ls.expand_or_jump(-1)
             end
