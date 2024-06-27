@@ -24,6 +24,56 @@ return {
             cmp_lsp.default_capabilities()
         )
 
+        local lspconfig = require('lspconfig')
+
+        local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
+        for type, icon in pairs(signs) do
+            local hl = "DiagnosticSign" .. type
+            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+        end
+
+        -- local icons = {
+        --     Array         = " ",
+        --     Boolean       = "󰨙 ",
+        --     Class         = " ",
+        --     Codeium       = "󰘦 ",
+        --     Color         = " ",
+        --     Control       = " ",
+        --     Collapsed     = " ",
+        --     Constant      = "󰏿 ",
+        --     Constructor   = " ",
+        --     Copilot       = " ",
+        --     Enum          = " ",
+        --     EnumMember    = " ",
+        --     Event         = " ",
+        --     Field         = " ",
+        --     File          = " ",
+        --     Folder        = " ",
+        --     Function      = "󰊕 ",
+        --     Interface     = " ",
+        --     Key           = " ",
+        --     Keyword       = " ",
+        --     Method        = "󰊕 ",
+        --     Module        = " ",
+        --     Namespace     = "󰦮 ",
+        --     Null          = " ",
+        --     Number        = "󰎠 ",
+        --     Object        = " ",
+        --     Operator      = " ",
+        --     Package       = " ",
+        --     Property      = " ",
+        --     Reference     = " ",
+        --     Snippet       = "󰘍 ",
+        --     String        = " ",
+        --     Struct        = "󰆼 ",
+        --     TabNine       = "󰏚 ",
+        --     Text          = " ",
+        --     TypeParameter = " ",
+        --     Unit          = " ",
+        --     Value         = " ",
+        --     Variable      = "󰀫 ",
+        -- }
+
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
@@ -59,6 +109,31 @@ return {
         local lspkind = require("lspkind")
         lspkind.init({})
 
+        local disable_semantic_tokens = {
+            lua = true,
+        }
+        vim.api.nvim_create_autocmd("LspAttach", {
+            callback = function(args)
+                local bufnr = args.buf
+                local client = assert(vim.lsp.get_client_by_id(args.data.client_id), "must have valid client")
+
+                vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0 })
+                vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = 0 })
+                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = 0 })
+                vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, { buffer = 0 })
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0 })
+                vim.keymap.set("n", "<leader>er", vim.diagnostic.open_float, { buffer = 0 })
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = 0 })
+                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = 0 })
+
+                local filetype = vim.bo[bufnr].filetype
+                if disable_semantic_tokens[filetype] then
+                    client.server_capabilities.semanticTokensProvider = nil
+                end
+            end,
+        })
+
         local cmp = require("cmp")
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
@@ -76,7 +151,7 @@ return {
                         behavior = cmp.ConfirmBehavior.Insert,
                         select = true
                     },
-                    {"i", "c"})
+                        {"i", "c"})
                 ),
             },
             experimental = {
