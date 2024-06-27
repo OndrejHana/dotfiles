@@ -1,0 +1,21 @@
+# Font
+font_family MesloLGM Nerd Font Mono Regular
+bold_font MesloLGM Nerd Font Mono Bold
+italic_font MesloLGM Nerd Font Mono Italic
+bold_italic_font MesloLGM Nerd Font Mono Bold Italic
+
+font_size 14
+
+term xterm-256color
+
+enable_audio_bell no
+
+dynamic_background_opacity true
+
+map ctrl+shift+q noop
+map ctrl+shift+w noop
+
+# BEGIN_KITTY_THEME
+# GitHub Dark
+include current-theme.conf
+# END_KITTY_THEME
